@@ -1,0 +1,67 @@
+{
+  "entities": {
+    "Company": {
+      "title": "Company",
+      "description": "A hiring company being tracked for legitimacy.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "description": "Legal name of the company" },
+        "address": { "type": "string", "description": "Reported physical address" },
+        "website": { "type": "string", "description": "Official or reported website URL" },
+        "status": { "type": "string", "enum": ["legit", "fake", "under-review"], "description": "Current legitimacy status" },
+        "rating": { "type": "number", "description": "Average legitimacy rating (1-5)" },
+        "totalRatings": { "type": "number", "description": "Total number of ratings received" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "reporterId": { "type": "string" }
+      },
+      "required": ["name", "status", "createdAt"]
+    },
+    "Report": {
+      "title": "Report",
+      "description": "Evidence submitted about a specific company.",
+      "type": "object",
+      "properties": {
+        "companyId": { "type": "string" },
+        "reporterId": { "type": "string" },
+        "evidenceText": { "type": "string" },
+        "evidenceUrls": { "type": "array", "items": { "type": "string" } },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["companyId", "reporterId", "evidenceText", "createdAt"]
+    },
+    "Post": {
+      "title": "Post",
+      "description": "A community forum post.",
+      "type": "object",
+      "properties": {
+        "authorId": { "type": "string" },
+        "authorName": { "type": "string" },
+        "title": { "type": "string" },
+        "content": { "type": "string" },
+        "type": { "type": "string", "enum": ["scam-alert", "discussion"] },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "commentCount": { "type": "number" }
+      },
+      "required": ["authorId", "title", "content", "createdAt"]
+    },
+    "Comment": {
+      "title": "Comment",
+      "description": "A comment on a forum post.",
+      "type": "object",
+      "properties": {
+        "postId": { "type": "string" },
+        "authorId": { "type": "string" },
+        "authorName": { "type": "string" },
+        "content": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["postId", "authorId", "content", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/companies/{companyId}": { "schema": "Company", "description": "Directory of companies" },
+    "/companies/{companyId}/reports/{reportId}": { "schema": "Report", "description": "Evidence reports for a company" },
+    "/posts/{postId}": { "schema": "Post", "description": "Forum topics" },
+    "/posts/{postId}/comments/{commentId}": { "schema": "Comment", "description": "Forum responses" }
+  }
+}
